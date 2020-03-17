@@ -2,6 +2,9 @@ const hapi = require('@hapi/hapi')
 const path = require('path')
 const inert = require('inert')
 
+// Database
+require('./database')
+const User = require('./models/user')
 
 const init = async () => {
     const server = new hapi.Server({
@@ -96,6 +99,26 @@ const init = async () => {
             })
         }
     })
+
+    server.route({
+        method: 'GET',
+        path: '/users',
+        handler: async (request, h) => {
+            const users = await User.find()
+            return h.view('users', { users })
+        }
+    })
+
+    server.route({
+        method: 'POST',
+        path: '/users',
+        handler: async (request, h) => {
+            const newUser = new User({ username: request.payload.username })
+            await newUser.save()
+            return h.redirect().location('users')
+        }
+    })
+
 }
 
 init()
