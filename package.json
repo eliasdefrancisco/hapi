@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/eliasdefrancisco/hapi#readme",
   "dependencies": {
-    "@hapi/hapi": "^19.1.1"
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/vision": "^6.0.0",
+    "handlebars": "^4.7.3",
+    "inert": "^5.1.3"
   }
 }
