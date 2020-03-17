@@ -1,6 +1,6 @@
 const hapi = require('@hapi/hapi')
 const path = require('path')
-// const inert = require('inert')
+const inert = require('inert')
 
 
 const init = async () => {
@@ -14,12 +14,17 @@ const init = async () => {
         }
     })
 
-    // await server.register(require('@hapi/vision'))
-    // await server.register(inert)
+    await server.register(require('@hapi/vision'))
+    await server.register(inert)
 
-    // server.views({
-        
-    // })
+    server.views({
+        engines: {
+            html: require('handlebars')
+        },
+        relativeTo: __dirname,
+        path: 'templates',
+        isCached: process.env.NODE_ENV === 'production'
+    })
 
     await server.start()
     console.log('Server running on: ', server.info.uri)
@@ -56,6 +61,39 @@ const init = async () => {
         path: '/text.txt',
         handler: (request, h) => {
             return h.file('./text.txt')
+        }
+    })
+
+    server.route({
+        method: 'GET',
+        path: '/page',
+        handler: (request, h) => {
+            return h.view('index')
+        }
+    })
+
+    server.route({
+        method: 'GET',
+        path: '/namepage',
+        handler: (request, h) => {
+            return h.view('namepage', {
+                name: 'Elaya'
+            })
+        }
+    })
+
+    server.route({
+        method: 'GET',
+        path: '/products',
+        handler: (request, h) => {
+            return h.view('products', {
+                products: [
+                    { name: 'laptop' },
+                    { name: 'mouse' },
+                    { name: 'keyboard' },
+                    { name: 'monitor' },
+                ]
+            })
         }
     })
 }
